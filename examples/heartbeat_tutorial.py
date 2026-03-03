@@ -239,29 +239,6 @@ def strip_heartbeat_token(
         return StrippedReply(should_skip=True, text="", did_strip=True)
 
     return StrippedReply(should_skip=False, text=work, did_strip=True)
-    did_strip = False
-    changed = True
-    while changed:
-        changed = False
-        if work.startswith(HEARTBEAT_TOKEN):
-            work = work[len(HEARTBEAT_TOKEN):].lstrip()
-            did_strip = changed = True
-        if work.endswith(HEARTBEAT_TOKEN):
-            work = work[:-len(HEARTBEAT_TOKEN)].rstrip()
-            did_strip = changed = True
-
-    work = " ".join(work.split())  # collapse whitespace
-
-    if not did_strip:
-        return StrippedReply(should_skip=False, text=text, did_strip=False)
-    if not work:
-        return StrippedReply(should_skip=True, text="", did_strip=True)
-
-    # In heartbeat mode, short tails are considered ack-only.
-    if mode == "heartbeat" and len(work) <= max_ack_chars:
-        return StrippedReply(should_skip=True, text="", did_strip=True)
-
-    return StrippedReply(should_skip=False, text=work, did_strip=True)
 
 
 async def chapter_3():
